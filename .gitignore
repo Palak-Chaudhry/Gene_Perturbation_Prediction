@@ -1,0 +1,23 @@
+# === Excluded files and folders ===
+# Large genomic FASTA files
+genomic_sequences/*.fa
+genomic_sequences/*.fasta
+
+# W&B logs
+wandb/debug-cli.mag1037.log
+
+# Single notebook to ignore
+perturbseq_ML_project.ipynb
+
+# === Common Python / ML ignore rules ===
+__pycache__/
+*.pyc
+*.pyo
+*.pkl
+*.npy
+*.npz
+*.pt
+*.pth
+.ipynb_checkpoints/
+.DS_Store
+*.log
