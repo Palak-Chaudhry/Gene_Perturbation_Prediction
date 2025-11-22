@@ -85,6 +85,36 @@ def cv_tune_mlp_on_train(X_train, y_train,
 
     return best_params, best_rmse
 
+def get_last_hidden_activations(mlp, X_scaled):
+    """
+    Given a fitted sklearn MLPRegressor and scaled inputs X_scaled,
+    return the activations of the LAST HIDDEN LAYER.
+
+    X_scaled: (n_samples, n_features)
+    Returns: (n_samples, hidden_layer_sizes[-1])
+    """
+    layer_input = X_scaled
+
+    # mlp.coefs_ and mlp.intercepts_ include ALL layers (hidden + output).
+    # We only want to go up to the last hidden layer, so we skip the last index.
+    n_weight_matrices = len(mlp.coefs_)  # = n_layers - 1
+    for i in range(n_weight_matrices - 1):  # exclude last (output) layer
+        layer_input = np.dot(layer_input, mlp.coefs_[i]) + mlp.intercepts_[i]
+
+        # Apply activation (you use 'relu' in your MLP)
+        if mlp.activation == "relu":
+            layer_input = np.maximum(layer_input, 0)
+        elif mlp.activation == "tanh":
+            layer_input = np.tanh(layer_input)
+        elif mlp.activation == "logistic":
+            layer_input = 1.0 / (1.0 + np.exp(-layer_input))
+        elif mlp.activation == "identity":
+            # no nonlinearity
+            pass
+
+    # layer_input now is the last hidden layer activations
+    return layer_input
+
 
 def run_tf_training_with_heldout_test(X, y, pert_name,
                                       train_idx,
@@ -98,6 +128,7 @@ def run_tf_training_with_heldout_test(X, y, pert_name,
       - On the 80% (train) perform CV-based hyperparameter tuning.
       - Retrain best model on full 80%.
       - Evaluate once on the 20% held-out test set.
+      - ALSO: store last hidden layer embeddings of test genes.
     """
 
     X_train, X_test = X[train_idx], X[test_idx]
@@ -120,6 +151,15 @@ def run_tf_training_with_heldout_test(X, y, pert_name,
     )
     final_model.fit(X_train, y_train)
 
+    # --- NEW PART: get last hidden layer embeddings for test genes ---
+    scaler = final_model.named_steps["scaler"]
+    mlp = final_model.named_steps["mlp"]
+
+    X_test_scaled = scaler.transform(X_test)
+    test_embeddings = get_last_hidden_activations(mlp, X_test_scaled)
+    # store as Python list (list of lists) for easy JSON/pandas handling
+    test_embeddings_list = test_embeddings.tolist()
+
     # Evaluate on the untouched 20%
     y_pred = final_model.predict(X_test)
     test_rmse = np.sqrt(mean_squared_error(y_test, y_pred))
@@ -132,9 +172,10 @@ def run_tf_training_with_heldout_test(X, y, pert_name,
         "cv_rmse_mean": best_cv_rmse,
         "hidden_layer_sizes": best_params["hidden_layer_sizes"],
         "alpha": best_params["alpha"],
-        "learning_rate_init": best_params["learning_rate_init"]
+        "learning_rate_init": best_params["learning_rate_init"],
+        # NEW: embeddings of last hidden layer for test genes
+        "test_embeddings": test_embeddings_list
     }
-
 
 # ======================
 # Load input data
@@ -282,6 +323,34 @@ all_results = Parallel(n_jobs=N_JOBS)(
 # Save results
 # ======================
 results_df = pd.DataFrame(all_results)
+
+# ======================
+# Build final_embedding_df
+# ======================
+
+# Column 1: Y values = transcription factors (perturbations)
+# Column 2: list of embeddings (last hidden activations on test genes)
+final_embedding_df = results_df[["perturbation", "test_embeddings"]].copy()
+final_embedding_df.columns = ["Y", "embedding"]
+# Save final embeddings to a separate CSV/JSON
+embedding_json_file = (
+    f"enformer_{EMBEDDING_TYPE}_mlp_80_20_heldout_embeddings_"
+    + input_file.split("/")[-1]
+    + ".json"
+)
+final_embedding_df.to_json(embedding_json_file, orient="records", lines=True)
+
+print(f"Embedding dataframe saved to {embedding_json_file}")
+
+embedding_csv_file = (
+    f"enformer_{EMBEDDING_TYPE}_mlp_80_20_heldout_embeddings_"
+    + input_file.split("/")[-1]
+    + ".csv"
+)
+final_embedding_df.to_csv(embedding_csv_file, index=False)
+
+print(f"Embedding dataframe (final_embedding_df) saved to {embedding_csv_file}")
+
 
 csv_file = f"enformer_{EMBEDDING_TYPE}_mlp_80_20_heldout_results_" + input_file.split("/")[-1] + ".csv"
 json_file = f"enformer_{EMBEDDING_TYPE}_mlp_80_20_heldout_results_" + input_file.split("/")[-1] + ".json"
