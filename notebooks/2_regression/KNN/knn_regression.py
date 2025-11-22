@@ -242,8 +242,11 @@ def main():
             
         performances.append(embedding_type_performance)
         
-        with open("results.json", "w") as f:
-            json.dump(performances, f, indent=2)
+    with open("results_gencode.json", "w") as f:
+        json.dump(performances[0], f, indent=2)
+        
+    with open("results_TSS.json", "w") as f:
+        json.dump(performances[1], f, indent=2)
         
         
 if __name__ == "__main__":
