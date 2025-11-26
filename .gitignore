@@ -13,9 +13,6 @@ perturbseq_ML_project.ipynb
 __pycache__/
 *.pyc
 *.pyo
-*.pkl
-*.npy
-*.npz
 *.pt
 *.pth
 .ipynb_checkpoints/
