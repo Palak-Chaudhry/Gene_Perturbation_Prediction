@@ -5,7 +5,7 @@
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=16
 #SBATCH --mem-per-cpu=2000M
-#SBATCH -t 2-00:00:00
+#SBATCH -t 6:00:00
 #SBATCH --mail-user=pac271@pitt.edu
 #SBATCH --mail-type=ALL
 

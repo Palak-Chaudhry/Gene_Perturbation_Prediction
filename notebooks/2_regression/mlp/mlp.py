@@ -26,7 +26,7 @@ def build_mlp_pipeline(hidden_layer_sizes=(64, 32),
         alpha=alpha,                  # L2 regularization
         learning_rate="adaptive",
         learning_rate_init=learning_rate_init,
-        max_iter=300,
+        max_iter=500,
         early_stopping=True,
         validation_fraction=0.1,
         n_iter_no_change=10,
@@ -237,19 +237,32 @@ X_np = X.values
 # Define hyperparameter grid for tuning
 # ======================
 param_grid = [
+
     {"hidden_layer_sizes": (32,),
      "alpha": 1e-3,
      "learning_rate_init": 1e-3},
 
-    {"hidden_layer_sizes": (64,),
-     "alpha": 1e-3,
-     "learning_rate_init": 1e-3},
-
     {"hidden_layer_sizes": (64, 32),
      "alpha": 1e-3,
      "learning_rate_init": 1e-3},
 
     {"hidden_layer_sizes": (64, 32),
+     "alpha": 1e-2,
+     "learning_rate_init": 1e-3},
+
+    {"hidden_layer_sizes": (64, 32),
+     "alpha": 1e-2,
+     "learning_rate_init": 1e-4},
+
+    {"hidden_layer_sizes": (64, 32),
+     "alpha": 1e-3,
+     "learning_rate_init": 1e-4},
+
+    {"hidden_layer_sizes": (128, 64, 32),
+     "alpha": 1e-3,
+     "learning_rate_init": 1e-3},
+
+    {"hidden_layer_sizes": (128, 64, 32),
      "alpha": 1e-2,
      "learning_rate_init": 1e-3},
 
