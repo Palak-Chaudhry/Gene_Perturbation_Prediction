@@ -4,8 +4,6 @@
 library(data.table)
 library(glmnet)
 library(reticulate)
-library(doSNOW)
-library(foreach)
 
 # Optional: point to local Python if needed
 # use_python("/usr/bin/python3", required = TRUE)
@@ -84,28 +82,21 @@ set.seed(42)  # Match Python's random_state
 folds <- sample(rep(1:k, length.out = n_samples))
 
 # ===============================
-# Parallel setup
-# ===============================
-ncores <- parallel::detectCores() - 1
-cl <- makeCluster(ncores, type = "SOCK")
-registerDoSNOW(cl)
-cat("Running on", ncores, "cores...\n")
-
-# Progress bar
-total <- ncol(Y)
-pb <- txtProgressBar(min = 0, max = total, style = 3)
-progress <- function(n) setTxtProgressBar(pb, n)
-opts <- list(progress = progress)
-
-# ===============================
 # Run CV for each perturbation with best params
 # ===============================
-# Convert best_params to a named vector for easy access in parallel
+# Convert best_params to a named vector for easy access
 lambda_vec <- setNames(best_params$lambda_min, best_params$perturbation)
 
-all_results <- foreach(i = seq_len(total), .combine = rbind,
-                       .packages = c("glmnet"),
-                       .options.snow = opts) %dopar% {
+total <- ncol(Y)
+cat("Processing", total, "perturbations...\n")
+
+# Progress bar
+pb <- txtProgressBar(min = 0, max = total, style = 3)
+
+all_results <- data.frame()
+
+for(i in seq_len(total)) {
+  setTxtProgressBar(pb, i)
 
   pert_name <- colnames(Y)[i]
 
@@ -116,7 +107,14 @@ all_results <- foreach(i = seq_len(total), .combine = rbind,
     return(NULL)
   }
 
-  y <- scale(Y[, i])
+  # IMPORTANT: Keep the original y values for RMSE calculation
+  y_original <- Y[, i]
+
+  # Scale y for training (standardize)
+  y_scaled <- scale(y_original)
+  y_mean <- attr(y_scaled, "scaled:center")
+  y_sd <- attr(y_scaled, "scaled:scale")
+
   fold_results <- data.frame()
 
   for(f in 1:k){
@@ -125,18 +123,24 @@ all_results <- foreach(i = seq_len(total), .combine = rbind,
 
     X_train <- X[train_idx, ]
     X_test  <- X[test_idx, ]
-    y_train <- y[train_idx]
-    y_test  <- y[test_idx]
+    y_train <- y_scaled[train_idx]
+    y_test_scaled  <- y_scaled[test_idx]
+    y_test_original <- y_original[test_idx]  # Original scale for RMSE
 
     # Train with alpha=0.5 (elastic net) and best lambda
     model <- glmnet(x = X_train, y = y_train, alpha = 0.5, lambda = lambda_best)
 
-    # Predict
-    preds <- predict(model, newx = X_test, s = lambda_best)
+    # Predict (predictions are on scaled space)
+    preds_scaled <- predict(model, newx = X_test, s = lambda_best)
 
-    # Calculate metrics
-    rmse <- sqrt(mean((y_test - preds)^2))
-    pearson <- cor(preds, y_test)
+    # Unscale predictions back to original scale
+    preds_original <- preds_scaled * y_sd + y_mean
+
+    # Calculate metrics on ORIGINAL SCALE for RMSE
+    rmse <- sqrt(mean((y_test_original - preds_original)^2))
+
+    # Pearson correlation (scale-invariant, same on both scales)
+    pearson <- cor(preds_scaled, y_test_scaled)
 
     fold_results <- rbind(fold_results, data.frame(
       perturbation = pert_name,
@@ -146,11 +150,10 @@ all_results <- foreach(i = seq_len(total), .combine = rbind,
     ))
   }
 
-  fold_results
+  all_results <- rbind(all_results, fold_results)
 }
 
 close(pb)
-stopCluster(cl)
 
 # ===============================
 # Train final models on ALL data and extract coefficients
@@ -208,6 +211,9 @@ cat("\nPer-fold results saved to", output_file, "\n")
 # ===============================
 # Calculate and save summary statistics
 # ===============================
+# Convert to data.table for aggregation
+all_results <- as.data.table(all_results)
+
 summary_per_gene <- all_results[, .(
   mean_rmse = mean(rmse),
   std_rmse = sd(rmse),
