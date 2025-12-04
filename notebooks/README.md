@@ -1,0 +1,179 @@
+# Project Organization
+
+This directory contains all analysis notebooks and results for the Gene Perturbation Prediction project.
+
+## Directory Structure
+
+```
+notebooks/
+├── 1_embeddings/           # Enformer embedding generation
+├── 2_regression/           # Regression model training
+├── 3_weight_analysis/      # Model weight analysis and clustering
+└── 4_compare_regression/   # Model performance comparison
+```
+
+---
+
+## 1_embeddings/
+
+Generate genomic sequence embeddings using pre-trained Enformer model.
+
+```
+1_embeddings/
+├── notebooks/
+│   ├── enformer_tss.ipynb                              # 32-dim TSS embeddings
+│   ├── enformer_tss_1024.ipynb                         # 1024-dim TSS embeddings
+│   ├── enformer_gencode.v49.pc_transcripts.ipynb       # 32-dim GENCODE
+│   └── enformer_gencode.v49.pc_transcripts_1024.ipynb  # 1024-dim GENCODE
+└── logs/
+    └── wandb/                                           # Weight & Biases logs
+```
+
+**Outputs**: Embeddings saved to `/embeddings/` directory at project root
+
+---
+
+## 2_regression/
+
+Train regression models on genomic embeddings to predict perturbation responses.
+
+### ElasticNet (32-dim embeddings)
+```
+2_regression/elasticnet/
+├── scripts/
+│   ├── glmnet_script_param.R                    # Hyperparameter tuning
+│   ├── glmnet_script_eval_with_best_params.R    # Final evaluation
+│   ├── run_glmnet_gencode.sbatch                # SLURM job for GENCODE
+│   ├── run_glmnet_tss.sbatch                    # SLURM job for TSS
+│   ├── run_elasticnet_eval_gencode.sh           # Evaluation script
+│   └── run_elasticnet_eval_tss.sh
+└── results/
+    ├── gencode_coefficients.csv                 # Model weights
+    ├── gencode_eval_summary.csv
+    ├── gencode_eval_with_best_params.csv
+    ├── gencode_results_cv.csv
+    └── tss_* (same structure)
+```
+
+### ElasticNet_1024 (1024-dim embeddings)
+```
+2_regression/elasticnet_1024/
+├── scripts/
+│   ├── glmnet_script_param_1024.R
+│   ├── glmnet_script_eval_with_best_params_1024.R
+│   ├── run_glmnet_gencode_1024.sbatch
+│   ├── run_glmnet_tss_1024.sbatch
+│   ├── run_elasticnet_eval_gencode_1024.sh
+│   ├── run_elasticnet_eval_tss_1024.sh
+│   └── logs/
+└── results/
+    └── (same structure as elasticnet/)
+```
+
+### XGBoost
+```
+2_regression/xgboost/
+├── scripts/
+│   ├── XGBRegressor_Enformer_param.py
+│   ├── XGBRegressor_Enformer_eval_with_best_params.py
+│   ├── run_xgboost_gencode.sbatch
+│   ├── run_xgboost_tss.sbatch
+│   ├── run_xgboost_eval_gencode.sh
+│   └── run_xgboost_eval_tss.sh
+└── results/
+    ├── gencode_eval_summary.csv
+    ├── gencode_eval_with_best_params.csv
+    ├── gencode_feature_importance.csv
+    ├── gencode_results.csv
+    ├── gencode_results.json
+    └── tss_* (same structure)
+```
+
+### MLP
+```
+2_regression/mlp/
+├── scripts/
+│   ├── mlp.py
+│   └── mlp_slurm.sbatch
+├── notebooks/
+│   └── test.ipynb
+└── results/
+    ├── gencode_heldout_embeddings.csv
+    ├── gencode_heldout_embeddings.json
+    ├── gencode_heldout_results.csv
+    ├── gencode_heldout_results.json
+    ├── gencode_results_summary.csv
+    └── tss_* (same structure)
+```
+
+---
+
+## 3_weight_analysis/
+
+Analyze and cluster model weights to identify biological patterns.
+
+```
+3_weight_analysis/
+├── notebooks/
+│   ├── elasticnet_DimReduction_Clustering.ipynb        # 32-dim analysis
+│   ├── elasticnet_DimReduction_Clustering_1024.ipynb   # 1024-dim analysis
+│   └── xgboost_DimReduction_Clustering.ipynb
+├── figures/
+│   ├── 32dim/
+│   │   ├── gencode_clustering_2d.png
+│   │   ├── gencode_clustering_3d.png
+│   │   ├── tss_clustering_2d.png
+│   │   └── tss_clustering_3d.png
+│   ├── 1024dim/
+│   │   └── (same structure)
+│   ├── interactive/
+│   │   ├── elasticnet_gencode_gmm_3d_umap.html
+│   │   ├── elasticnet_gencode_kmeans_3d_umap.html
+│   │   ├── elasticnet_tss_gmm_3d_umap.html
+│   │   └── elasticnet_tss_kmeans_3d_umap.html
+│   └── xgboost_* (XGBoost figures)
+└── cluster_assignments/
+    ├── elasticnet_gencode_2d_k4.json
+    ├── elasticnet_gencode_3d_k4.json
+    ├── elasticnet_tss_2d_k4.json
+    ├── elasticnet_tss_3d_k4.json
+    └── elasticnet_1024_* (1024-dim assignments)
+```
+
+---
+
+## 4_compare_regression/
+
+Compare performance across all models and embedding types.
+
+```
+4_compare_regression/
+├── notebooks/
+│   └── comparisons.ipynb                        # Main comparison analysis
+├── figures/
+│   ├── model_comparison.png                     # All models compared
+│   ├── elasticnet_comparison_detailed.png       # ElasticNet vs ElasticNet_1024
+│   ├── elasticnet_vs_1024_performance_changes.png
+│   └── high_performers_analysis.png
+├── interactive/
+│   └── elasticnet_comparison_interactive.html   # Interactive plotly visualization
+└── results/
+    ├── unified_results_gencode.csv              # All model results (GENCODE)
+    ├── unified_results_tss.csv                  # All model results (TSS)
+    ├── gencode_elasticnet_improvements.csv
+    ├── tss_elasticnet_improvements.csv
+    ├── high_performers_gencode.csv
+    └── high_performers_tss.csv
+```
+
+---
+
+## File Naming Conventions
+
+- **Embedding type**: `gencode` or `tss`
+- **Model**: `elasticnet`, `elasticnet_1024`, `xgboost`, `mlp`, `knn`
+- **Output type**: `coefficients`, `results`, `eval_summary`, `feature_importance`, etc.
+- **Redundant suffixes removed**: Files no longer include `active_guides_CRISPRa_mean_pop_mean`
+
+---
+

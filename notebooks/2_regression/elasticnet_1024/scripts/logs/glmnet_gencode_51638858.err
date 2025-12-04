@@ -1,0 +1,6 @@
+/var/lib/slurm-llnl/slurmd/job51638858/slurm_script: line 13: module: command not found
+Loading required package: Matrix
+Loaded glmnet 4.1-10
+Loading required package: foreach
+Loading required package: iterators
+Loading required package: snow

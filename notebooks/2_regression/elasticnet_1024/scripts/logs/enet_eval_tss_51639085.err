@@ -1,0 +1,4 @@
+/var/lib/slurm-llnl/slurmd/job51639085/slurm_script: line 13: module: command not found
+Loading required package: Matrix
+Loaded glmnet 4.1-10
+There were 50 or more warnings (use warnings() to see the first 50)
