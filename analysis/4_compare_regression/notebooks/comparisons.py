@@ -9,11 +9,11 @@ import seaborn as sns
 
 
 # File paths
-gencode_input = '../../../notebooks/2_regression/mlp/enformer_gencode_mlp_80_20_heldout_results_active_guides_CRISPRa_mean_pop_mean.csv.csv'
-tss_input = '../../../notebooks/2_regression/mlp/enformer_tss_mlp_80_20_heldout_results_active_guides_CRISPRa_mean_pop_mean.csv.csv'
+gencode_input = '../../2_regression/mlp/results/gencode_heldout_results.csv'
+tss_input = '../../2_regression/mlp/results/tss_heldout_results.csv'
 
-gencode_output = '../../../notebooks/2_regression/mlp/enformer_gencode_mlp_results_summary.csv'
-tss_output = '../../../notebooks/2_regression/mlp/enformer_tss_mlp_results_summary.csv'
+gencode_output = '../../2_regression/mlp/results/gencode_results_summary.csv'
+tss_output = '../../2_regression/mlp/results/tss_results_summary.csv'
 
 # Process gencode file - try reading as CSV
 df_gencode = pd.read_csv(gencode_input)
@@ -34,11 +34,11 @@ print(df_tss_summary.head())
 
 
 # File paths
-gencode_json = '../../../notebooks/2_regression/KNN/results_gencode.json'
-tss_json = '../../../notebooks/2_regression/KNN/results_TSS.json'
+gencode_json = '../../2_regression/KNN/results_gencode.json'
+tss_json = '../../2_regression/KNN/results_TSS.json'
 
-gencode_output = '../../../notebooks/2_regression/KNN/results_gencode.csv'
-tss_output = '../../../notebooks/2_regression/KNN/results_TSS.csv'
+gencode_output = '../../2_regression/KNN/results_gencode.csv'
+tss_output = '../../2_regression/KNN/results_TSS.csv'
 
 # Load and process gencode
 with open(gencode_json, 'r') as f:
@@ -69,28 +69,28 @@ print(df_tss_output.head())
 # File paths
 
 # KNN
-knn_gencode = '../../../notebooks/2_regression/KNN/results_gencode.json'
-knn_tss = '../../../notebooks/2_regression/KNN/results_TSS.json'
+knn_gencode = '../../2_regression/KNN/results_gencode.json'
+knn_tss = '../../2_regression/KNN/results_TSS.json'
 
 # XGBoost
-xgb_gencode = '../../../notebooks/2_regression/xgboost/enformer_gencode_xgboost_eval_summary_active_guides_CRISPRa_mean_pop_mean.csv'
-xgb_tss = '../../../notebooks/2_regression/xgboost/enformer_tss_xgboost_eval_summary_active_guides_CRISPRa_mean_pop_mean.csv'
+xgb_gencode = '../../2_regression/xgboost/results/gencode_eval_summary.csv'
+xgb_tss = '../../2_regression/xgboost/results/tss_eval_summary.csv'
 
 # MLP
-mlp_gencode = '../../../notebooks/2_regression/mlp/enformer_gencode_mlp_results_summary.csv'
-mlp_tss = '../../../notebooks/2_regression/mlp/enformer_tss_mlp_results_summary.csv'
+mlp_gencode = '../../2_regression/mlp/results/gencode_results_summary.csv'
+mlp_tss = '../../2_regression/mlp/results/tss_results_summary.csv'
 
 # ElasticNet - use the eval_with_best_params files instead
-enet_gencode = '../../../notebooks/2_regression/elasticnet/glmnet_gencode_eval_with_best_params_active_guides_CRISPRa_mean_pop_mean.csv'
-enet_tss = '../../../notebooks/2_regression/elasticnet/glmnet_tss_eval_with_best_params_active_guides_CRISPRa_mean_pop_mean.csv'
+enet_gencode = '../../2_regression/elasticnet/results/gencode_eval_with_best_params.csv'
+enet_tss = '../../2_regression/elasticnet/results/tss_eval_with_best_params.csv'
 
 # ElasticNet - use the eval_with_best_params files instead
-enet_1024_gencode = '../../../notebooks/2_regression/elasticnet_1024/glmnet_gencode_eval_with_best_params_active_guides_CRISPRa_mean_pop_mean.csv'
-enet_1024_tss = '../../../notebooks/2_regression/elasticnet_1024/glmnet_tss_eval_with_best_params_active_guides_CRISPRa_mean_pop_mean.csv'
+enet_1024_gencode = '../../2_regression/elasticnet_1024/results/gencode_eval_with_best_params.csv'
+enet_1024_tss = '../../2_regression/elasticnet_1024/results/tss_eval_with_best_params.csv'
 
 # Output
-output_gencode = '../../../notebooks/2_regression/unified_results_gencode.csv'
-output_tss = '../../../notebooks/2_regression/unified_results_tss.csv'
+output_gencode = '../results/unified_results_gencode.csv'
+output_tss = '../results/unified_results_tss.csv'
 
 
 # Load KNN data
@@ -209,24 +209,24 @@ print("STEP 1: REGENERATING UNIFIED CSV FILES WITH CORRECTED ELASTICNET")
 # File paths
 
 # KNN
-knn_gencode = '../../../notebooks/2_regression/KNN/results_gencode.json'
-knn_tss = '../../../notebooks/2_regression/KNN/results_TSS.json'
+knn_gencode = '../../2_regression/KNN/results_gencode.json'
+knn_tss = '../../2_regression/KNN/results_TSS.json'
 
 # XGBoost
-xgb_gencode = '../../../notebooks/2_regression/xgboost/enformer_gencode_xgboost_eval_summary_active_guides_CRISPRa_mean_pop_mean.csv'
-xgb_tss = '../../../notebooks/2_regression/xgboost/enformer_tss_xgboost_eval_summary_active_guides_CRISPRa_mean_pop_mean.csv'
+xgb_gencode = '../../2_regression/xgboost/results/gencode_eval_summary.csv'
+xgb_tss = '../../2_regression/xgboost/results/tss_eval_summary.csv'
 
 # MLP
-mlp_gencode = '../../../notebooks/2_regression/mlp/enformer_gencode_mlp_results_summary.csv'
-mlp_tss = '../../../notebooks/2_regression/mlp/enformer_tss_mlp_results_summary.csv'
+mlp_gencode = '../../2_regression/mlp/results/gencode_results_summary.csv'
+mlp_tss = '../../2_regression/mlp/results/tss_results_summary.csv'
 
 # ElasticNet - use the eval_with_best_params files instead
-enet_gencode = '../../../notebooks/2_regression/elasticnet/glmnet_gencode_eval_with_best_params_active_guides_CRISPRa_mean_pop_mean.csv'
-enet_tss = '../../../notebooks/2_regression/elasticnet/glmnet_tss_eval_with_best_params_active_guides_CRISPRa_mean_pop_mean.csv'
+enet_gencode = '../../2_regression/elasticnet/results/gencode_eval_with_best_params.csv'
+enet_tss = '../../2_regression/elasticnet/results/tss_eval_with_best_params.csv'
 
 # ElasticNet - use the eval_with_best_params files instead
-enet_1024_gencode = '../../../notebooks/2_regression/elasticnet_1024/glmnet_gencode_eval_with_best_params_active_guides_CRISPRa_mean_pop_mean.csv'
-enet_1024_tss = '../../../notebooks/2_regression/elasticnet_1024/glmnet_tss_eval_with_best_params_active_guides_CRISPRa_mean_pop_mean.csv'
+enet_1024_gencode = '../../2_regression/elasticnet_1024/results/gencode_eval_with_best_params.csv'
+enet_1024_tss = '../../2_regression/elasticnet_1024/results/tss_eval_with_best_params.csv'
 
 # Output
 output_gencode = '../results/unified_results_gencode.csv'

@@ -8,7 +8,7 @@
 #SBATCH --error=scripts/logs/enet_eval_gencode_%j.err
 #SBATCH --mail-type=END
 #SBATCH --mail-user=mag1037@pitt.edu
-#SBATCH --chdir=/net/dali/home/mscbio/mag1037/work/classes/intro_to_ml/project/notebooks/2_regression/elasticnet_1024/scripts
+#SBATCH --chdir=/net/dali/home/mscbio/mag1037/work/classes/intro_to_ml/project/analysis/2_regression/elasticnet_1024/scripts
 
 module load anaconda
 source activate /net/dali/home/mscbio/mag1037/miniforge3/envs/R_env
