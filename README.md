@@ -30,12 +30,42 @@ This directory contains all analysis scripts and results for the Gene Perturbati
 ## Directory Structure
 
 ```
-analysis/
-├── 1_embeddings/           # Enformer embedding generation
-├── 2_regression/           # Regression model training
-├── 3_weight_analysis/      # Model weight analysis and clustering
-└── 4_compare_regression/   # Model performance comparison
+project/
+├── analysis/                           # All analysis scripts and results
+│   ├── 0_data/                        # Data preprocessing scripts
+│   ├── 1_embeddings/                  # Enformer embedding generation
+│   ├── 2_regression/                  # Regression model training
+│   ├── 3_weight_analysis/             # Model weight analysis and clustering
+│   └── 4_compare_regression/          # Model performance comparison
+├── embeddings/                         # Generated Enformer embeddings (.npy files)
+├── perturb_seq_data/                   # CRISPRa Perturb-seq data (download from [Zenodo](https://zenodo.org/records/15200179#:~:text=from%20overloaded%20droplets%3A-,fibroblast_CRISPRa_mean_pop.h5ad,-Files))
+├── genomic_sequences.tar.gz            # Compressed genomic sequence files
+└── genomic_sequences/                  # Extracted genomic sequences (FASTA files)
 ```
+
+---
+
+## Data Directories
+
+### embeddings/
+Contains pre-computed Enformer embeddings for all genes:
+- `embeddings_enformer_tss_full.npy` - Full 3,072-dim TSS embeddings from Enformer trunk
+- `embeddings_enformer_tss_1024.npy` - PCA-reduced 1,024-dim TSS embeddings
+- `embeddings_enformer_gencode.v49.pc_transcripts_full.npy` - Full 3,072-dim GENCODE embeddings
+- `embeddings_enformer_gencode.v49.pc_transcripts_1024.npy` - PCA-reduced 1,024-dim GENCODE embeddings
+
+### perturb_seq_data/
+Contains processed CRISPRa Perturb-seq data from human fibroblasts:
+- `fibroblast_CRISPRa_mean_pop.h5ad` - Original single-cell data
+- `fibroblast_CRISPRa_mean_pop_mean.csv` - Mean expression changes per TF (231 perturbations)
+- `fibroblast_CRISPRa_mean_pop_median.csv` - Median expression changes per TF
+
+### genomic_sequences.tar.gz
+Compressed archive containing genomic sequence FASTA files (stored with Git LFS):
+- `gencode.v49.pc_transcripts.gene_names.fa` - Protein-coding gene sequences
+- `TSS.fa` - Transcription start site-centered sequences
+
+**To extract**: `tar -xzf genomic_sequences.tar.gz`
 
 ---
 
@@ -196,7 +226,6 @@ Compare performance across all models and embedding types.
 - **Embedding type**: `gencode` or `tss`
 - **Model**: `elasticnet`, `elasticnet_1024`, `xgboost`, `mlp`, `knn`
 - **Output type**: `coefficients`, `results`, `eval_summary`, `feature_importance`, etc.
-- **Redundant suffixes removed**: Files no longer include `active_guides_CRISPRa_mean_pop_mean`
 
 ---
 
