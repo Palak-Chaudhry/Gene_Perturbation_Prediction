@@ -38,11 +38,11 @@ project/
 │   ├── 3_weight_analysis/             # Model weight analysis and clustering
 │   └── 4_compare_regression/          # Model performance comparison
 ├── embeddings/                         # Generated Enformer embeddings (.npy files)
-├── perturb_seq_data/                   # CRISPRa Perturb-seq data (download from [Zenodo](https://zenodo.org/records/15200179#:~:text=from%20overloaded%20droplets%3A-,fibroblast_CRISPRa_mean_pop.h5ad,-Files))
+├── perturb_seq_data/                   # CRISPRa Perturb-seq data (download from Zenodo)
 ├── genomic_sequences.tar.gz            # Compressed genomic sequence files
 └── genomic_sequences/                  # Extracted genomic sequences (FASTA files)
 ```
-
+The CRISPRa Perturb-seq data can be found in [Zenodo](https://zenodo.org/records/15200179#:~:text=from%20overloaded%20droplets%3A-,fibroblast_CRISPRa_mean_pop.h5ad,-Files)
 ---
 
 ## Data Directories
