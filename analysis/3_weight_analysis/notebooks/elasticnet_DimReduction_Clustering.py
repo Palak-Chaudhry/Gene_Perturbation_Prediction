@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# Converted from elasticnet_DimReduction_Clustering.ipynb
 
 import numpy as np
 import pandas as pd
@@ -24,7 +23,7 @@ plt.rcParams['font.size'] = 10
 gencode_path = '../../2_regression/elasticnet/results/gencode_coefficients.csv'
 tss_path = '../../2_regression/elasticnet/results/tss_coefficients.csv'
 
-# Load data
+# data
 df_gencode = pd.read_csv(gencode_path)
 wide = df_gencode.pivot(index="perturbation", columns="feature", values="coefficient")
 df_gencode = wide.reindex(
@@ -90,7 +89,7 @@ pca_full_tss.fit(X_tss_scaled)
 print(f"Total number of components: {len(pca_full_gencode.components_)}")
 print(f"Shape of feature matrix: {X_gencode_scaled.shape}")
 
-# Create scree plots showing variance explained by each PC
+# scree plots showing variance explained by each PC
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
 
 # Gencode - Variance explained per component
@@ -243,7 +242,7 @@ print(f"Clustering completed with k={optimal_k} clusters!")
 
 import json
 
-# Create dictionaries mapping perturbation names to cluster assignments
+# dictionaries mapping perturbation names to cluster assignments
 print("Saving cluster assignments to JSON files...")
 
 # Gencode cluster assignments
@@ -448,7 +447,7 @@ print(f"Clustering completed with k={optimal_k} clusters!")
 
 import json
 
-# Create dictionaries mapping perturbation names to cluster assignments
+# dictionaries mapping perturbation names to cluster assignments
 print("Saving cluster assignments to JSON files...")
 
 # Gencode cluster assignments

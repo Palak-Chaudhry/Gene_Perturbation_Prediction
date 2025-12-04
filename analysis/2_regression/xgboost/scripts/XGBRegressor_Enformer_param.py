@@ -69,9 +69,7 @@ def cv_single_target(X, y, pert_name, n_splits=5):
 
     return results
 
-# ======================
 # Get command line arguments
-# ======================
 if len(sys.argv) < 2:
     raise ValueError("Please provide embedding type as argument: 'tss' or 'gencode'")
 
@@ -81,9 +79,7 @@ print("=" * 50)
 print(f"Embedding type: {EMBEDDING_TYPE}")
 print("=" * 50)
 
-# ======================
-# Load input data
-# ======================
+# input data
 # Configuration: Choose which embeddings to use
 # Option 1: TSS-based embeddings (19685 genes, 32 features)
 # Option 2: Gencode v49 PC transcripts embeddings (19058 genes, 32 features)
@@ -91,7 +87,7 @@ print("=" * 50)
 input_file = "../../../data/active_guides_CRISPRa_mean_pop_mean.csv"
 mean_pop = pd.read_csv(input_file, index_col=0)
 
-# Load embeddings and metadata based on selected type
+# embeddings and metadata based on selected type
 if EMBEDDING_TYPE == "tss":
     embeddings_path = "../../../embeddings/embeddings_enformer_tss.npy"
     metadata_path = "../../../embeddings/enformer_gene_names.txt"
@@ -103,11 +99,11 @@ elif EMBEDDING_TYPE == "gencode":
 else:
     raise ValueError(f"Unknown embedding type: {EMBEDDING_TYPE}. Use 'tss' or 'gencode'.")
 
-# Load embeddings (allow_pickle for compatibility)
+# embeddings (allow_pickle for compatibility)
 embeddings = np.load(embeddings_path, allow_pickle=True)
 print(f"Embeddings shape: {embeddings.shape}")
 
-# Load gene names from metadata
+# gene names from metadata
 meta_table = pd.read_csv(metadata_path, sep="\t", header=None, names=["index", "gene"])
 print(f"Loaded {len(meta_table)} gene names from metadata")
 
@@ -123,9 +119,7 @@ perturb_names = Y.columns
 
 print("X shape:", X.shape, "| Y shape:", Y.shape)
 
-# ======================
 # Run CV for each perturbation
-# ======================
 all_results = []
 
 for i in range(Y.shape[1]):
@@ -135,9 +129,7 @@ for i in range(Y.shape[1]):
     results = cv_single_target(X.values, Y.iloc[:, i].values, pert_name)
     all_results.extend(results)
 
-# ======================
 # Save results
-# ======================
 results_df = pd.DataFrame(all_results)
 
 # Include embedding type in output filename

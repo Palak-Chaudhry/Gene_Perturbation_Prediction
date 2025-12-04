@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# Converted from enformer_tss_1024.ipynb
 
 import os
 
@@ -64,7 +63,7 @@ def pad_sequence(seq, target_len):
 
 
 
-# Load sequences from FASTA file
+# sequences from FASTA file
 input_fasta = "../../genomic_sequences/TSS.fa"
 
 # Convert sequences to one-hot encoding format
@@ -76,7 +75,7 @@ ohes = convert_input_type(
 )
 print(f"One-hot encoded shape: {ohes[0].shape}")
 
-# Initialize Enformer pre-trained model
+# Enformer pre-trained model
 feature_extractor = EnformerPretrainedModel(
     n_tasks=32,
     device=device
@@ -88,7 +87,7 @@ total_params = sum(p.numel() for p in feature_extractor.parameters())
 print(f"Model loaded successfully")
 print(f"Total parameters: {total_params:,}")
 
-# Create DataLoader for batch processing
+# DataLoader for batch processing
 test_loader = DataLoader(
     dataset=ohes,
     batch_size=BATCH_SIZE,
@@ -171,14 +170,14 @@ np.save(
     embeddings_1024
 )
 
-# Create metadata directory if it doesn't exist
+# metadata directory if it doesn't exist
 os.makedirs(metadata_dir, exist_ok=True)
 print(f"Created metadata directory: {metadata_dir}")
 # Extract gene names from FASTA file
 print(f"Extracting gene names from {fasta_file}...")
 gene_names = extract_gene_names(fasta_file)
 print(f"Extracted {len(gene_names)} gene names")
-# Load embeddings to verify alignment (allow pickle for this file)
+# embeddings to verify alignment (allow pickle for this file)
 print(f"\nLoading embeddings from {embeddings_file}...")
 embeddings = np.load(embeddings_file, allow_pickle=True)
 print(f"Embeddings shape: {embeddings.shape}")

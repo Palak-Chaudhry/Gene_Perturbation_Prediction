@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# Converted from comparisons.ipynb
 
 import pandas as pd
 import json
@@ -40,7 +39,7 @@ tss_json = '../../2_regression/KNN/results_TSS.json'
 gencode_output = '../../2_regression/KNN/results_gencode.csv'
 tss_output = '../../2_regression/KNN/results_TSS.csv'
 
-# Load and process gencode
+# and process gencode
 with open(gencode_json, 'r') as f:
     data_gencode = json.load(f)
 
@@ -53,7 +52,7 @@ print(f"Gencode CSV saved to: {gencode_output}")
 print(f"Shape: {df_gencode_output.shape}")
 print(df_gencode_output.head())
 
-# Load and process TSS
+# and process TSS
 with open(tss_json, 'r') as f:
     data_tss = json.load(f)
 
@@ -93,7 +92,7 @@ output_gencode = '../results/unified_results_gencode.csv'
 output_tss = '../results/unified_results_tss.csv'
 
 
-# Load KNN data
+# KNN data
 with open(knn_gencode, 'r') as f:
     knn_g = pd.DataFrame(json.load(f))
     knn_g['RMSE'] = np.sqrt(knn_g['MSE'])
@@ -108,7 +107,7 @@ with open(knn_tss, 'r') as f:
     knn_t = knn_t[['perturbation', 'RMSE', 'pearson']]
     knn_t = knn_t.rename(columns={'RMSE': 'KNN_RMSE', 'pearson': 'KNN_Pearson'})
 
-# Load XGBoost data
+# XGBoost data
 xgb_g = pd.read_csv(xgb_gencode)
 xgb_g = xgb_g[['perturbation', 'mean_rmse', 'mean_pearson']]
 xgb_g = xgb_g.rename(columns={'mean_rmse': 'XGBoost_RMSE', 'mean_pearson': 'XGBoost_Pearson'})
@@ -117,7 +116,7 @@ xgb_t = pd.read_csv(xgb_tss)
 xgb_t = xgb_t[['perturbation', 'mean_rmse', 'mean_pearson']]
 xgb_t = xgb_t.rename(columns={'mean_rmse': 'XGBoost_RMSE', 'mean_pearson': 'XGBoost_Pearson'})
 
-# Load MLP data
+# MLP data
 mlp_g = pd.read_csv(mlp_gencode)
 mlp_g = mlp_g[['perturbation', 'rmse_test', 'pearson_corr_test']]
 mlp_g = mlp_g.rename(columns={'rmse_test': 'MLP_RMSE', 'pearson_corr_test': 'MLP_Pearson'})
@@ -126,7 +125,7 @@ mlp_t = pd.read_csv(mlp_tss)
 mlp_t = mlp_t[['perturbation', 'rmse_test', 'pearson_corr_test']]
 mlp_t = mlp_t.rename(columns={'rmse_test': 'MLP_RMSE', 'pearson_corr_test': 'MLP_Pearson'})
 
-# Load ElasticNet data - aggregate per-fold results
+# ElasticNet data - aggregate per-fold results
 enet_g_raw = pd.read_csv(enet_gencode)
 # Group by perturbation and calculate mean RMSE and Pearson
 enet_g = enet_g_raw.groupby('perturbation').agg({
@@ -142,7 +141,7 @@ enet_t = enet_t_raw.groupby('perturbation').agg({
 }).reset_index()
 enet_t = enet_t.rename(columns={'rmse': 'ElasticNet_RMSE', 'pearson_corr': 'ElasticNet_Pearson'})
 
-# Load ElasticNet data - aggregate per-fold results
+# ElasticNet data - aggregate per-fold results
 enet_1024_g_raw = pd.read_csv(enet_1024_gencode)
 # Group by perturbation and calculate mean RMSE and Pearson
 enet_1024_g = enet_1024_g_raw.groupby('perturbation').agg({
@@ -233,7 +232,7 @@ output_gencode = '../results/unified_results_gencode.csv'
 output_tss = '../results/unified_results_tss.csv'
 
 
-# Load KNN
+# KNN
 with open(knn_gencode, 'r') as f:
     knn_g = pd.DataFrame(json.load(f))
     knn_g['RMSE'] = np.sqrt(knn_g['MSE'])
@@ -248,7 +247,7 @@ with open(knn_tss, 'r') as f:
     knn_t = knn_t[['perturbation', 'RMSE', 'pearson']]
     knn_t = knn_t.rename(columns={'RMSE': 'KNN_RMSE', 'pearson': 'KNN_Pearson'})
 
-# Load XGBoost
+# XGBoost
 xgb_g = pd.read_csv(xgb_gencode)
 xgb_g = xgb_g[xgb_g['perturbation'] != 'Overall']  # Remove overall row
 xgb_g = xgb_g[['perturbation', 'mean_rmse', 'mean_pearson']]
@@ -259,7 +258,7 @@ xgb_t = xgb_t[xgb_t['perturbation'] != 'Overall']
 xgb_t = xgb_t[['perturbation', 'mean_rmse', 'mean_pearson']]
 xgb_t = xgb_t.rename(columns={'mean_rmse': 'XGBoost_RMSE', 'mean_pearson': 'XGBoost_Pearson'})
 
-# Load MLP
+# MLP
 mlp_g = pd.read_csv(mlp_gencode)
 mlp_g = mlp_g[['perturbation', 'rmse_test', 'pearson_corr_test']]
 mlp_g = mlp_g.rename(columns={'rmse_test': 'MLP_RMSE', 'pearson_corr_test': 'MLP_Pearson'})
@@ -269,7 +268,7 @@ mlp_t = mlp_t[['perturbation', 'rmse_test', 'pearson_corr_test']]
 mlp_t = mlp_t.rename(columns={'rmse_test': 'MLP_RMSE', 'pearson_corr_test': 'MLP_Pearson'})
 
 
-# Load ElasticNet data - aggregate per-fold results
+# ElasticNet data - aggregate per-fold results
 enet_g_raw = pd.read_csv(enet_gencode)
 # Group by perturbation and calculate mean RMSE and Pearson
 enet_g = enet_g_raw.groupby('perturbation').agg({
@@ -285,7 +284,7 @@ enet_t = enet_t_raw.groupby('perturbation').agg({
 }).reset_index()
 enet_t = enet_t.rename(columns={'rmse': 'ElasticNet_RMSE', 'pearson_corr': 'ElasticNet_Pearson'})
 
-# Load ElasticNet data - aggregate per-fold results
+# ElasticNet data - aggregate per-fold results
 enet_1024_g_raw = pd.read_csv(enet_1024_gencode)
 # Group by perturbation and calculate mean RMSE and Pearson
 enet_1024_g = enet_1024_g_raw.groupby('perturbation').agg({
@@ -428,7 +427,7 @@ print(pearson_counts_tss.to_string())
 # 3. Visualizations - Updated with TSS distributions
 print("2. CREATING VISUALIZATIONS...")
 
-# Create a 3x4 grid to show all comparisons
+# a 3x4 grid to show all comparisons
 fig, axes = plt.subplots(3, 4, figsize=(20, 15))
 fig.suptitle('Model Comparison: Gencode vs TSS', fontsize=18, fontweight='bold')
 
@@ -571,9 +570,7 @@ print("Saved: model_comparisos.png")
 plt.show()
 
 
-# ============================================================================
 # ANALYSIS OF HIGH-PERFORMING PERTURBATIONS (Pearson > 0.1)
-# ============================================================================
 
 print("\n" + "="*80)
 print("ANALYSIS OF HIGH-PERFORMING PERTURBATIONS (Pearson > 0.1)")
@@ -661,7 +658,7 @@ for pert, count in tss_high_count_sorted:
     perf_str = " | ".join([f"{model}: {row[f'{model}_Pearson']:.4f}" for model in models])
     print(f"{pert:<15} {count:<10} {perf_str}")
 
-# Create detailed comparison table for high performers
+# detailed comparison table for high performers
 print("\n" + "="*80)
 print("DETAILED COMPARISON TABLE - HIGH PERFORMERS (Pearson > 0.1 in ANY model)")
 print("="*80)
@@ -747,9 +744,7 @@ plt.savefig('../figures/high_performers_analysis.png', dpi=300, bbox_inches='tig
 print("\nSaved: high_performers_analysis.png")
 plt.show()
 
-# ============================================================================
 # GENERAL STATISTICS - EASY TO READ SUMMARY
-# ============================================================================
 
 print("\n" + "="*80)
 print("GENERAL STATISTICS SUMMARY")
@@ -971,9 +966,7 @@ else:
 
 print("\n" + "="*80)
 
-# ============================================================================
 # HIGH PERFORMER STATISTICS - SIDE BY SIDE COMPARISON
-# ============================================================================
 
 print("\n" + "="*80)
 print("HIGH PERFORMER STATISTICS AT DIFFERENT PEARSON THRESHOLDS")
@@ -1048,7 +1041,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load data
+# data
 df_gencode = pd.read_csv('../results/unified_results_gencode.csv')
 df_tss = pd.read_csv('../results/unified_results_tss.csv')
 
@@ -1150,7 +1143,7 @@ def analyze_performance_changes(df, embedding_type):
 df_gencode_analyzed = analyze_performance_changes(df_gencode, 'Gencode')
 df_tss_analyzed = analyze_performance_changes(df_tss, 'TSS')
 
-# Create visualizations
+# visualizations
 print(f"\n{'='*80}")
 print("CREATING VISUALIZATIONS...")
 print(f"{'='*80}")
@@ -1268,7 +1261,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.patches import Rectangle
 
-# Load data
+# data
 df_gencode = pd.read_csv('../results/unified_results_gencode.csv')
 df_tss = pd.read_csv('../results/unified_results_tss.csv')
 
@@ -1276,7 +1269,7 @@ df_tss = pd.read_csv('../results/unified_results_tss.csv')
 df_gencode['Pearson_Improvement'] = df_gencode['ElasticNet_1024_Pearson'] - df_gencode['ElasticNet_Pearson']
 df_tss['Pearson_Improvement'] = df_tss['ElasticNet_1024_Pearson'] - df_tss['ElasticNet_Pearson']
 
-# Create figure with both embeddings side by side
+# figure with both embeddings side by side
 fig, axes = plt.subplots(1, 2, figsize=(16, 7))
 
 def create_detailed_scatter(ax, df, embedding_type, color='steelblue'):
@@ -1380,7 +1373,7 @@ def create_detailed_scatter(ax, df, embedding_type, color='steelblue'):
     
     return ax
 
-# Create plots for both embedding types
+# plots for both embedding types
 create_detailed_scatter(axes[0], df_gencode, 'GENCODE', color='steelblue')
 create_detailed_scatter(axes[1], df_tss, 'TSS', color='darkorange')
 
@@ -1414,7 +1407,7 @@ from matplotlib.patches import Rectangle
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-# Load data
+# data
 df_gencode = pd.read_csv('../results/unified_results_gencode.csv')
 df_tss = pd.read_csv('../results/unified_results_tss.csv')
 
@@ -1422,7 +1415,7 @@ df_tss = pd.read_csv('../results/unified_results_tss.csv')
 df_gencode['Pearson_Improvement'] = df_gencode['ElasticNet_1024_Pearson'] - df_gencode['ElasticNet_Pearson']
 df_tss['Pearson_Improvement'] = df_tss['ElasticNet_1024_Pearson'] - df_tss['ElasticNet_Pearson']
 
-# Create static matplotlib figure with both embeddings side by side
+# static matplotlib figure with both embeddings side by side
 fig, axes = plt.subplots(1, 2, figsize=(18, 8))
 
 def create_detailed_scatter(ax, df, embedding_type, color='steelblue'):
@@ -1529,7 +1522,7 @@ def create_detailed_scatter(ax, df, embedding_type, color='steelblue'):
     
     return ax
 
-# Create static plots
+# static plots
 create_detailed_scatter(axes[0], df_gencode, 'GENCODE', color='steelblue')
 create_detailed_scatter(axes[1], df_tss, 'TSS', color='darkorange')
 
@@ -1541,13 +1534,11 @@ plt.savefig('../figures/elasticnet_comparison_detailed.png',
 print("Saved: elasticnet_comparison_detailed.png")
 plt.show()
 
-# ============================================================================
 # CREATE INTERACTIVE HTML PLOT
-# ============================================================================
 
 print("\nCreating interactive HTML plot...")
 
-# Create subplots for interactive version
+# subplots for interactive version
 fig_interactive = make_subplots(
     rows=1, cols=2,
     subplot_titles=('GENCODE Embeddings', 'TSS Embeddings'),
@@ -1561,7 +1552,7 @@ def add_interactive_scatter(fig, df, embedding_type, row, col):
     max_val = max(df['ElasticNet_Pearson'].max(), df['ElasticNet_1024_Pearson'].max())
     min_val = min(df['ElasticNet_Pearson'].min(), df['ElasticNet_1024_Pearson'].min())
     
-    # Create hover text with detailed information
+    # hover text with detailed information
     hover_text = []
     for idx, row_data in df.iterrows():
         text = (

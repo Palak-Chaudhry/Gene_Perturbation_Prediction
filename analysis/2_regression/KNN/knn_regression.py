@@ -17,10 +17,10 @@ from sklearn.preprocessing import StandardScaler
 
 
 def load_embedding(embedding_path, gene_name_path):
-    # Load embedding matrix
+    # embedding matrix
     embedding = np.load(embedding_path)      # (N, D)
 
-    # Load gene names
+    # gene names
     gene_names = []
     with open(gene_name_path) as f:
         for line in f:
@@ -35,7 +35,7 @@ def load_embedding(embedding_path, gene_name_path):
 
 
 def extract_embedding_for_csv_cols(csv_path, embedding, name_to_idx):
-    # Load CSV
+    # CSV
     df = pd.read_csv(csv_path, index_col=0)
 
     col_names = df.columns.tolist()
@@ -142,7 +142,7 @@ def main():
     for i in range(len(embedding_types)):
         
         # ----------------------------------------------------------------------
-        # Load data
+        # data
         # ----------------------------------------------------------------------
         embedding, name_to_idx = load_embedding(embedding_files[i], gene_names[i])
         

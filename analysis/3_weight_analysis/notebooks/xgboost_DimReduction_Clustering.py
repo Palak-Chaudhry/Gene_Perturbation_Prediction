@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# Converted from xgboost_DimReduction_Clustering.ipynb
 
 import numpy as np
 import pandas as pd
@@ -24,7 +23,7 @@ plt.rcParams['font.size'] = 10
 gencode_path = '../../2_regression/xgboost/results/gencode_feature_importance.csv'
 tss_path = '../../2_regression/xgboost/results/tss_feature_importance.csv'
 
-# Load data
+# data
 df_gencode = pd.read_csv(gencode_path)
 df_tss = pd.read_csv(tss_path)
 
@@ -78,7 +77,7 @@ pca_full_tss.fit(X_tss_scaled)
 print(f"Total number of components: {len(pca_full_gencode.components_)}")
 print(f"Shape of feature matrix: {X_gencode_scaled.shape}")
 
-# Create scree plots showing variance explained by each PC
+# scree plots showing variance explained by each PC
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
 
 # Gencode - Variance explained per component

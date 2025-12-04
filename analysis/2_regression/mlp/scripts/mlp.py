@@ -177,15 +177,13 @@ def run_tf_training_with_heldout_test(X, y, pert_name,
         "test_embeddings": test_embeddings_list
     }
 
-# ======================
-# Load input data
-# ======================
+# input data
 EMBEDDING_TYPE = "gencode" # "tss"  # or 
 
 input_file = "/ocean/projects/cis240075p/pchaudhr/Gene_Perturbation_Prediction/data/active_guides_CRISPRa_mean_pop_mean.csv"
 mean_pop = pd.read_csv(input_file, index_col=0)
 
-# Load embeddings and metadata based on selected type
+# embeddings and metadata based on selected type
 if EMBEDDING_TYPE == "tss":
     embeddings_path = "../../../embeddings/embeddings_enformer_tss.npy"
     metadata_path = "../../../embeddings/enformer_gene_names.txt"
@@ -215,9 +213,7 @@ perturb_names = Y.columns
 
 print("X shape:", X.shape, "| Y shape:", Y.shape)
 
-# ======================
-# Create a single 80/20 train/test split for genes
-# ======================
+# a single 80/20 train/test split for genes
 n_genes = X.shape[0]
 all_indices = np.arange(n_genes)
 
@@ -233,9 +229,7 @@ print(f"Train genes: {len(train_idx)}, Test genes: {len(test_idx)}")
 # Convert X to numpy once
 X_np = X.values
 
-# ======================
 # Define hyperparameter grid for tuning
-# ======================
 param_grid = [
 
     {"hidden_layer_sizes": (32,),
@@ -274,9 +268,7 @@ param_grid = [
      "alpha": 1e-2,
      "learning_rate_init": 1e-4},
 ]
-# ======================
 # Run training/tuning/testing for each perturbation (TF) IN PARALLEL
-# ======================
 
 def process_one_tf(j):
     pert_name = perturb_names[j]
@@ -332,14 +324,10 @@ all_results = Parallel(n_jobs=N_JOBS)(
 
 #     all_results.append(res)
 
-# ======================
 # Save results
-# ======================
 results_df = pd.DataFrame(all_results)
 
-# ======================
 # Build final_embedding_df
-# ======================
 
 # Column 1: Y values = transcription factors (perturbations)
 # Column 2: list of embeddings (last hidden activations on test genes)

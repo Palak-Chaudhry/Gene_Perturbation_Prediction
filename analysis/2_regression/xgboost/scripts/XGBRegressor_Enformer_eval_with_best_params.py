@@ -49,9 +49,7 @@ def cv_single_target_with_params(X, y, pert_name, params, n_splits=5):
     return results
 
 
-# ======================
 # Get command line arguments
-# ======================
 if len(sys.argv) < 2:
     raise ValueError("Please provide embedding type as argument: 'tss' or 'gencode'")
 
@@ -61,9 +59,7 @@ print("=" * 50)
 print(f"Embedding type: {EMBEDDING_TYPE}")
 print("=" * 50)
 
-# ======================
-# Load best parameters from previous run
-# ======================
+# best parameters from previous run
 input_file = "../../../data/active_guides_CRISPRa_mean_pop_mean.csv"
 param_file = f"../results/{EMBEDDING_TYPE}_results.csv"
 
@@ -80,12 +76,10 @@ best_params = param_results.groupby('perturbation').agg({
 
 print(f"Loaded best parameters for {len(best_params)} genes")
 
-# ======================
-# Load input data
-# ======================
+# input data
 mean_pop = pd.read_csv(input_file, index_col=0)
 
-# Load embeddings and metadata based on selected type
+# embeddings and metadata based on selected type
 if EMBEDDING_TYPE == "tss":
     embeddings_path = "../../../embeddings/embeddings_enformer_tss.npy"
     metadata_path = "../../../embeddings/enformer_gene_names.txt"
@@ -97,11 +91,11 @@ elif EMBEDDING_TYPE == "gencode":
 else:
     raise ValueError(f"Unknown embedding type: {EMBEDDING_TYPE}. Use 'tss' or 'gencode'.")
 
-# Load embeddings (allow_pickle for compatibility)
+# embeddings (allow_pickle for compatibility)
 embeddings = np.load(embeddings_path, allow_pickle=True)
 print(f"Embeddings shape: {embeddings.shape}")
 
-# Load gene names from metadata
+# gene names from metadata
 meta_table = pd.read_csv(metadata_path, sep="\t", header=None, names=["index", "gene"])
 print(f"Loaded {len(meta_table)} gene names from metadata")
 
@@ -117,9 +111,7 @@ perturb_names = Y.columns
 
 print("X shape:", X.shape, "| Y shape:", Y.shape)
 
-# ======================
 # Run CV for each perturbation with best params AND train final model
-# ======================
 all_results = []
 all_weights = []
 
@@ -168,9 +160,7 @@ for i in range(Y.shape[1]):
         weight_row[f'feature_{feat_idx}'] = importance
     all_weights.append(weight_row)
 
-# ======================
 # Save per-fold results
-# ======================
 results_df = pd.DataFrame(all_results)
 
 csv_file = f"../results/{EMBEDDING_TYPE}_eval_with_best_params.csv"
@@ -178,9 +168,7 @@ results_df.to_csv(csv_file, index=False)
 
 print(f"\nPer-fold results saved to {csv_file}")
 
-# ======================
 # Calculate and save summary statistics
-# ======================
 # Calculate mean metrics per gene
 summary_per_gene = results_df.groupby('perturbation').agg({
     'rmse': ['mean', 'std'],
@@ -210,9 +198,7 @@ with open(summary_file, 'a') as f:
 
 print(f"\nSummary statistics saved to {summary_file}")
 
-# ======================
 # Save feature importance weights
-# ======================
 weights_df = pd.DataFrame(all_weights)
 weights_file = f"../results/{EMBEDDING_TYPE}_feature_importance.csv"
 weights_df.to_csv(weights_file, index=False)
